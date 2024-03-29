@@ -19,8 +19,7 @@ class FileStorage:
                     classed_objects[key] = obj
 
             return classed_objects
-        else:
-            return FileStorage.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -62,6 +61,8 @@ class FileStorage:
     def delete(self, obj=None):
         """Deletes an object from __objects"""
 
-        if obj is not None:
-            key = obj.to_dict()['__class__'] + '.' + obj.id
-            del FileStorage.__objects[key]
+        if obj:
+            key = obj.__class__.__name__ + '.' + obj.id
+            if key in self.all():
+                del self.all()[key]
+            self.save()
