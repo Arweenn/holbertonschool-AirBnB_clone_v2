@@ -116,32 +116,39 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, args):
         """ Create an object of any class"""
 
-        arg_list = args.split()
-
         if not args:
             print("** class name missing **")
             return
 
-        if arg_list[0] not in HBNBCommand.classes:
+        list_cmd = args.split()
+        cls_name = list_cmd[0]
+
+        if cls_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = HBNBCommand.classes[arg_list[0]]()
-
-        for i in range(1, len(arg_list)):
-            arg_split = arg_list[i].split('=')
-            if len(arg_split) > 1:
-                if arg_split[1][0] == '"':
-                    arg_split[1] = arg_split[1].replace('_', ' ')
-                    setattr(new_instance, arg_split[0], arg_split[1][1:-1])
-                elif '.' in arg_split[1]:
-                    setattr(new_instance, arg_split[0], float(arg_split[1]))
+        new_dict = {}
+        for i in range(1, len(list_cmd)):
+            split_cmd = list_cmd[i].split('=')
+            key = split_cmd[0]
+            value = split_cmd[1]
+            try:
+                if value[0] != '\"':
+                    if '.' in value:
+                        new_dict[key] = float(value)
+                    else:
+                        new_dict[key] = int(value)
                 else:
-                    setattr(new_instance, arg_split[0], int(arg_split[1]))
-        print(new_instance.id)
+                    value = value.replace('\"', '')
+                    value = value.replace('_', ' ')
+                    new_dict[key] = value
+            except IndexError:
+                pass
 
+        new_instance = HBNBCommand.classes[cls_name]()
+        new_instance.__dict__.update(new_dict)
         new_instance.save()
-        storage.save()
+        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
