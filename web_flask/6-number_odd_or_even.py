@@ -33,28 +33,17 @@ def display_python(text):
 
 @app.route('/number/<int:n>', strict_slashes=False)
 def display_number(n):
-    try:
-        return f'{n} is a number'
-    except TypeError:
-        return f'{n} must be an integer'
+    return f'{n} is a number'
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
 def display_template(n):
-    try:
-        return render_template('5-number.html', n=n)
-    except TypeError:
-        return f'{n} must be an integer'
+    return render_template('5-number.html', n=n)
 
 
 @app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
 def display_even_odd(n):
-    try:
-        n_even = n % 2 == 0
-        return render_template(
-            '6-number_even_or_odd.html', n=n, n_even=n_even)
-    except TypeError:
-        return f'{n} must be an integer'
+    return render_template('6-number_even_or_odd.html', n=n)
 
 
 if __name__ == "__main__":
