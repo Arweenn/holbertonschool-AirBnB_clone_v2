@@ -11,6 +11,12 @@ from models.amenity import Amenity
 app = Flask(__name__)
 
 
+@app.teardown_appcontext
+def remove_sqlsession(exception=None):
+    """A method that removes SQL Session"""
+    storage.close()
+
+
 @app.route("/hbnb_filters", strict_slashes=False)
 def hbnb_filters():
     """Display HBNB filters"""
@@ -18,12 +24,6 @@ def hbnb_filters():
     list_amenity = storage.all(Amenity)
     return render_template("10-hbnb_filters.html", states=list_states,
                            amenities=list_amenity)
-
-
-@app.teardown_appcontext
-def remove_sqlsession(exception=None):
-    """A method that removes SQL Session"""
-    storage.close()
 
 
 if __name__ == "__main__":
